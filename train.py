@@ -49,29 +49,29 @@ optimizer = torch.optim.SGD(model.parameters(),lr = 0.01)
 def main(): 
 	print(model)
 	sepoch = -1
-	MinAcc = 0
+	MinLoss = 100
 
-	RestartTraining = True
+	RestartTraining = False
 	if RestartTraining:
 		checkpoint = torch.load('./model/ckpt487.pth') # fill in the path
 		sepoch = checkpoint['epoch']
 		model.load_state_dict(checkpoint['model'])
 		optimizer.load_state_dict(checkpoint['optimizer'])
-		MinAcc = checkpoint['accuracy']
-	print(MinAcc)
+		MinLoss = checkpoint['loss']
+	print(MinLoss)
 
 	for epoch in range(sepoch + 1,NEpoches + sepoch + 1):
-		train(epoch)
-		TestAcc = test()
-		print('====> Cur Acc: {:.6f} Best Acc: {:.6f}'.format(TestAcc,MinAcc))
-		if epoch > int((sepoch * 2 + 2 + NEpoches) / 2) and TestAcc > MinAcc:
+		TestLoss = train(epoch)
+		test()
+		print('====> Cur Loss: {:.6f} Best Loss: {:.6f}'.format(TestLoss,MinLoss))
+		if epoch > int((sepoch * 2 + 2 + NEpoches) / 2) and TestLoss < MinLoss:
 			print('Saving checkpoint...')
-			MinAcc = TestAcc
+			MinLoss = TestLoss
 			checkpoint = {
 				'epoch':epoch,
 				'model':model.state_dict(),
 				'optimizer':optimizer.state_dict(),
-				'accuracy':TestAcc}
+				'loss':TestLoss}
 			if not os.path.isdir('./model'):
 				os.mkdir('./model')
 			torch.save(checkpoint,'./model/ckpt{}.pth'.format(epoch + 1))
@@ -94,6 +94,7 @@ def train(epoch):
 		totloss += loss.item() * images.size(0)
 	totloss /= len(TrainData.dataset)
 	print('====> Epoch: {} Loss: {:.6f}'.format(epoch + 1,totloss))
+	return totloss
 
 def test():
 	acc = 0

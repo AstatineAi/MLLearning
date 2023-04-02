@@ -22,12 +22,19 @@ class MLP(torch.nn.Module):
 		return torch.nn.functional.softmax(self.layer3(b),dim = 1)
 		
 model = MLP().cuda()
-# checkpoint = torch.load('./model/ckptBest.pth')
-# model.load_state_dict(checkpoint['model'])
+checkpoint = torch.load('./model/ckptBest.pth')
+model.load_state_dict(checkpoint['model'])
+model.eval()
 
 def recognition(image):
+	image = torch.tensor(image)
+	image = image.float()
+	image.div_(255)
 	with torch.no_grad():
-	return
+		image = torch.autograd.Variable(image).cuda()
+		out = model(image).tolist()[0]
+	print(out)
+	return {str(i): out[i] for i in range(10)}
 
 def GradioMain():
 	label = gradio.outputs.Label(num_top_classes=4)
@@ -39,8 +46,6 @@ def GradioMain():
 		title = 'Hand Written Digit Recognizer'
 	)
 	ui.launch()
-	
-
 
 if __name__ == '__main__':
 	GradioMain()
