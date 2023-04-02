@@ -33,7 +33,6 @@ def recognition(image):
 	with torch.no_grad():
 		image = torch.autograd.Variable(image).cuda()
 		out = model(image).tolist()[0]
-	print(out)
 	return {str(i): out[i] for i in range(10)}
 
 def GradioMain():
