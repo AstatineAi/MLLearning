@@ -44,7 +44,7 @@ def GradioMain():
 		live = True,
 		title = 'Hand Written Digit Recognizer'
 	)
-	ui.launch()
+	ui.launch(share = True)
 
 if __name__ == '__main__':
 	GradioMain()
