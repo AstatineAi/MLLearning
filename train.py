@@ -7,7 +7,7 @@ import torchvision.transforms as transforms
 import numpy
 import os
 
-NEpoches = 200
+NEpoches = 500
 BatchSize = 1000
 
 TrainSet = torchvision.datasets.MNIST("./data/train",
@@ -51,9 +51,9 @@ def main():
 	sepoch = -1
 	MinLoss = 100
 
-	RestartTraining = False
+	RestartTraining = True
 	if RestartTraining:
-		checkpoint = torch.load('./model/ckpt487.pth') # fill in the path
+		checkpoint = torch.load('./model/ckpt723.pth') # fill in the path
 		sepoch = checkpoint['epoch']
 		model.load_state_dict(checkpoint['model'])
 		optimizer.load_state_dict(checkpoint['optimizer'])
