@@ -2,6 +2,4 @@
 
 Just an amateur learning ML.
 
-Hand written numbers identifing with MLP model trained on MNIST.
-
-
+Hand written digits recoginzing with MLP model trained on MNIST.
